@@ -12,8 +12,8 @@
   "stats": {
     "pagesScanned": 335,
     "pagesWithCardModal": 34,
-    "pagesLinkedSharedCss": 34,
-    "pagesLinkedSharedJs": 34,
-    "inlineModalScriptsRemoved": 3
+    "pagesLinkedSharedCss": 8,
+    "pagesLinkedSharedJs": 8,
+    "inlineModalScriptsRemoved": 0
   }
 }

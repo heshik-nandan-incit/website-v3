@@ -18,9 +18,15 @@ Run from the repository root:
 bash tools/rebuild.sh
 ```
 
+For GitHub Pages project-site output, rebuild with the repository base path:
+
+```bash
+BASE_PATH=/website-v3 bash tools/rebuild.sh
+```
+
 ## Serve Locally
 
-Serve `site` as the web root. This is required because the HTML uses root-relative paths like `/who-we-are/`.
+Serve `site` as the web root. This is required because the HTML uses root-relative paths like `/who-we-are/` in local builds.
 
 ```bash
 bash tools/serve.sh
@@ -33,6 +39,21 @@ npm run serve
 ```
 
 If you serve the repo root instead of `site`, links such as `/who-we-are/` will resolve to the wrong location and return 404 because the generated pages live under `site/...`.
+
+## GitHub Pages
+
+This repository publishes the committed `site/` folder through [.github/workflows/deploy-pages.yml](/Users/heshiknandan/Desktop/workspace/incit-website/.github/workflows/deploy-pages.yml). Because the original `pages/` source corpus is not stored in the GitHub repo, GitHub cannot rebuild the site itself.
+
+Before pushing a deployment update:
+
+```bash
+BASE_PATH=/website-v3 bash tools/rebuild.sh
+git add site reports
+git commit -m "Update GitHub Pages build"
+git push
+```
+
+The build writes `site/.nojekyll` automatically so GitHub Pages serves the static output without Jekyll processing.
 
 ## Reports
 

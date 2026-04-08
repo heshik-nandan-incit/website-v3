@@ -1,6 +1,6 @@
 # Website V3 Validation Report
 
-Generated: 2026-04-08T02:50:39Z
+Generated: 2026-04-08T03:02:25Z
 
 ## Summary
 
@@ -18,7 +18,7 @@ Generated: 2026-04-08T02:50:39Z
 - `prompt.md` was preserved and not modified.
 - The source corpus is approximately 8.2 GB, with several pages tens to hundreds of MB each.
 - Because of source size, this build reconstructs hierarchy without full HTML rewriting.
-- Root-relative links such as `/what-we-do/...` resolve against the rebuilt hierarchy when hosted at the site root.
+- Root-relative local links were rewritten to include the deployment base path `/website-v3`.
 - Absolute `https://incit.org/...` links remain unchanged and should be normalized in a later pass if deployment will not use the original domain.
 - Remote assets remain unchanged because no local asset mirror exists in the provided reference folder.
 - Missing navbar landing pages were rebuilt as minimal section indexes or redirect aliases derived from available routes.

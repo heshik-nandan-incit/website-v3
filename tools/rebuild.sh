@@ -7,6 +7,7 @@ OUTPUT_DIR="$ROOT_DIR"
 SITE_DIR="$OUTPUT_DIR/site"
 REPORTS_DIR="$OUTPUT_DIR/reports"
 TMP_DIR="$OUTPUT_DIR/.tmp"
+BASE_PATH="${BASE_PATH:-}"
 
 mkdir -p "$SITE_DIR" "$REPORTS_DIR" "$TMP_DIR"
 
@@ -17,10 +18,35 @@ DUPLICATES_TSV="$TMP_DIR/duplicates.tsv"
 
 : > "$MANIFEST_ALL"
 
+if [[ -n "$BASE_PATH" ]]; then
+  BASE_PATH="/${BASE_PATH#/}"
+  BASE_PATH="${BASE_PATH%/}"
+  [[ "$BASE_PATH" == "/" ]] && BASE_PATH=""
+fi
+
+with_base_path() {
+  local route="$1"
+
+  if [[ -z "$BASE_PATH" || "$route" != /* ]]; then
+    printf '%s' "$route"
+    return
+  fi
+
+  if [[ "$route" == "/" ]]; then
+    printf '%s/' "$BASE_PATH"
+    return
+  fi
+
+  printf '%s%s' "$BASE_PATH" "$route"
+}
+
 write_redirect_page() {
   local route="$1"
   local destination="$2"
+  local resolved_destination
   local target
+
+  resolved_destination="$(with_base_path "$destination")"
 
   if [[ "$route" == "/" ]]; then
     target="$SITE_DIR/index.html"
@@ -35,13 +61,13 @@ write_redirect_page() {
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="refresh" content="0; url=$destination">
+  <meta http-equiv="refresh" content="0; url=$resolved_destination">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Redirecting</title>
-  <script>window.location.replace("$destination");</script>
+  <script>window.location.replace("$resolved_destination");</script>
 </head>
 <body>
-  <p>Redirecting to <a href="$destination">$destination</a>...</p>
+  <p>Redirecting to <a href="$resolved_destination">$resolved_destination</a>...</p>
 </body>
 </html>
 EOF
@@ -85,7 +111,7 @@ write_section_index_page() {
       }
     ' "$MANIFEST_CHOSEN" | sort | while IFS= read -r child; do
       [[ -z "$child" ]] && continue
-      printf '    <li><a href="%s">%s</a></li>\n' "$child" "$child"
+      printf '    <li><a href="%s">%s</a></li>\n' "$(with_base_path "$child")" "$child"
     done
     echo '  </ul>'
     echo '</body>'
@@ -95,9 +121,34 @@ write_section_index_page() {
 
 normalize_local_nav_links() {
   find "$SITE_DIR" -type f -name 'index.html' -print0 | while IFS= read -r -d '' file; do
-    perl -0pi -e '
-      s/href="https:\/\/incit\.org\/who-we-support\/technology-solution-providers\/"/href="\/who-we-support\/technology-solution-providers\/"/g;
+    INCIT_BASE_PATH="$BASE_PATH" perl -0pi -e '
+      my $base = $ENV{INCIT_BASE_PATH} // q{};
+      s/href="https:\/\/incit\.org\/who-we-support\/technology-solution-providers\/"/href="${base}\/who-we-support\/technology-solution-providers\/"/g;
     ' "$file"
+  done
+}
+
+apply_base_path() {
+  [[ -z "$BASE_PATH" ]] && return
+
+  find "$SITE_DIR" -type f -name 'index.html' -print0 | while IFS= read -r -d '' file; do
+    python3 - "$file" "$BASE_PATH" <<'PY'
+import re
+import sys
+from pathlib import Path
+
+file_path = Path(sys.argv[1])
+base_path = sys.argv[2].rstrip("/")
+text = file_path.read_text(errors="ignore")
+
+text = re.sub(
+    r'((?:href|src|action)=["\'])/(?!/)',
+    lambda m: f"{m.group(1)}{base_path}/",
+    text,
+)
+
+file_path.write_text(text)
+PY
   done
 }
 
@@ -217,7 +268,10 @@ normalize_local_nav_links
 
 python3 "$OUTPUT_DIR/tools/componentize_shared.py"
 python3 "$OUTPUT_DIR/tools/componentize_card_modal.py"
-python3 "$OUTPUT_DIR/tools/check_nav.py" > "$REPORTS_DIR/nav-audit.json"
+python3 "$OUTPUT_DIR/tools/strip_data_uris.py"
+apply_base_path
+touch "$SITE_DIR/.nojekyll"
+BASE_PATH="$BASE_PATH" python3 "$OUTPUT_DIR/tools/check_nav.py" > "$REPORTS_DIR/nav-audit.json"
 
 {
   echo "# Website V3 Validation Report"
@@ -240,7 +294,11 @@ python3 "$OUTPUT_DIR/tools/check_nav.py" > "$REPORTS_DIR/nav-audit.json"
   echo "- \`prompt.md\` was preserved and not modified."
   echo "- The source corpus is approximately 8.2 GB, with several pages tens to hundreds of MB each."
   echo "- Because of source size, this build reconstructs hierarchy without full HTML rewriting."
-  echo "- Root-relative links such as \`/what-we-do/...\` resolve against the rebuilt hierarchy when hosted at the site root."
+  if [[ -n "$BASE_PATH" ]]; then
+    echo "- Root-relative local links were rewritten to include the deployment base path \`$BASE_PATH\`."
+  else
+    echo "- Root-relative links such as \`/what-we-do/...\` resolve against the rebuilt hierarchy when hosted at the site root."
+  fi
   echo "- Absolute \`https://incit.org/...\` links remain unchanged and should be normalized in a later pass if deployment will not use the original domain."
   echo "- Remote assets remain unchanged because no local asset mirror exists in the provided reference folder."
   echo "- Missing navbar landing pages were rebuilt as minimal section indexes or redirect aliases derived from available routes."
