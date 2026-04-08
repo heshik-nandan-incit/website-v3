@@ -1,11 +1,11 @@
 # Website V3 Validation Report
 
-Generated: 2026-04-08T02:37:35Z
+Generated: 2026-04-08T02:50:39Z
 
 ## Summary
 
 - Source HTML files scanned: 329
-- Pages generated in `website-v3/site`: 328
+- Pages generated in `site`: 328
 - Duplicate canonical routes detected: 1
 - Reconstruction basis: canonical URLs extracted from source pages
 - Output strategy: clone-copied source HTML placed into reconstructed folder hierarchy

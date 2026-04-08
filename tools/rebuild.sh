@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SOURCE_DIR="$ROOT_DIR/pages"
-OUTPUT_DIR="$ROOT_DIR/website-v3"
+OUTPUT_DIR="$ROOT_DIR"
 SITE_DIR="$OUTPUT_DIR/site"
 REPORTS_DIR="$OUTPUT_DIR/reports"
 TMP_DIR="$OUTPUT_DIR/.tmp"
@@ -227,7 +227,7 @@ python3 "$OUTPUT_DIR/tools/check_nav.py" > "$REPORTS_DIR/nav-audit.json"
   echo "## Summary"
   echo
   echo "- Source HTML files scanned: $(wc -l < "$MANIFEST_ALL" | tr -d ' ')"
-  echo "- Pages generated in \`website-v3/site\`: $(wc -l < "$MANIFEST_CHOSEN" | tr -d ' ')"
+  echo "- Pages generated in \`site\`: $(wc -l < "$MANIFEST_CHOSEN" | tr -d ' ')"
   echo "- Duplicate canonical routes detected: $(wc -l < "$DUPLICATES_TSV" | tr -d ' ')"
   echo "- Reconstruction basis: canonical URLs extracted from source pages"
   echo "- Output strategy: clone-copied source HTML placed into reconstructed folder hierarchy"
