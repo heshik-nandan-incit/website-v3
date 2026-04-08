@@ -1,0 +1,19 @@
+{
+  "sharedComponents": [
+    {
+      "name": "incit-card-modal-css",
+      "path": "assets/incit-card-modal.css"
+    },
+    {
+      "name": "incit-card-modal-js",
+      "path": "assets/incit-card-modal.js"
+    }
+  ],
+  "stats": {
+    "pagesScanned": 335,
+    "pagesWithCardModal": 34,
+    "pagesLinkedSharedCss": 34,
+    "pagesLinkedSharedJs": 34,
+    "inlineModalScriptsRemoved": 3
+  }
+}

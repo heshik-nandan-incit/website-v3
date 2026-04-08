@@ -1,0 +1,19 @@
+{
+  "sharedComponents": [
+    {
+      "name": "header",
+      "path": "components/header.html"
+    },
+    {
+      "name": "footer",
+      "path": "components/footer.html"
+    }
+  ],
+  "stats": {
+    "pagesScanned": 335,
+    "headerPagesUpdated": 0,
+    "footerPagesUpdated": 180,
+    "pagesWithSharedHeader": 327,
+    "pagesWithSharedFooter": 323
+  }
+}

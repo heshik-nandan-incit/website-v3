@@ -1,0 +1,130 @@
+.incit-card-swiper-wrapper {
+  margin-bottom: 1.5rem;
+}
+
+.incit-card {
+  background-color: #fff;
+  border-radius: 28px;
+  min-height: 265px;
+  display: flex !important;
+  flex-direction: column;
+  padding: 2rem;
+  position: relative;
+}
+
+.incit-card-title {
+  font-family: var(--incit-font-family) !important;
+  font-size: 1.625rem !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.18px !important;
+  line-height: 2rem !important;
+  color: #000;
+  margin: 0 0 0.75rem !important;
+  z-index: 2;
+}
+
+.incit-card-description {
+  font-family: var(--incit-font-family) !important;
+  font-size: 1.25rem !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.12px !important;
+  line-height: 1.5rem !important;
+  color: #000;
+  margin: 0 !important;
+  z-index: 2;
+}
+
+.incit-card-icon-bg {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 174px;
+  height: 174px;
+  aspect-ratio: 1 / 1;
+  z-index: 1;
+}
+
+.incit-card-learnmore {
+  margin-left: auto;
+  margin-top: auto;
+  display: flex;
+  column-gap: 1rem;
+  align-items: center;
+  z-index: 2;
+}
+
+.incit-card-learnmore .incit-card-learnmore-text {
+  font-family: var(--incit-font-family);
+  color: var(--incit-color-blue);
+  font-size: 1.0625rem;
+  letter-spacing: -0.17px;
+  font-weight: 600;
+  transform: translateX(10px);
+  opacity: 0;
+}
+
+.incit-card-learnmore .incit-card-learnmore-icon rect {
+  fill: #333336;
+}
+
+.incit-card-learnmore .incit-card-learnmore-icon path {
+  fill: #d6d6d7;
+}
+
+.incit-card-navigation-wrapper {
+  display: flex;
+  justify-content: end;
+  column-gap: 1.25rem;
+}
+
+.incit-card-buttons {
+  display: flex;
+}
+
+.incit-card-buttons > svg > g {
+  opacity: 1;
+}
+
+.incit-card-modal-content {
+  display: flex;
+  flex-direction: column;
+  row-gap: 40px;
+}
+
+.incit-card-modal-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media only screen and (max-width: 1024px) {
+  .incit-card-modal-navigation-wrapper {
+    flex-direction: column;
+    align-items: baseline;
+    row-gap: 24px;
+  }
+
+  .incit-card-modal-navigation {
+    width: 100%;
+    flex-direction: column;
+    align-items: baseline;
+    row-gap: 16px;
+  }
+
+  .incit-card-navigation-buttons {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .incit-card-prev.incit-card-navigation-buttons {
+    flex-direction: row-reverse;
+  }
+
+  .incit-card-modal {
+    padding: 24px;
+  }
+
+  .incit-card-modal-content h2 {
+    font-size: 2.75rem;
+  }
+}

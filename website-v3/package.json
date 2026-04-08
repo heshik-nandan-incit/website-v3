@@ -1,0 +1,10 @@
+{
+  "name": "website-v3",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "build": "bash ./tools/rebuild.sh",
+    "serve": "node ./tools/serve.mjs",
+    "serve:8080": "PORT=8080 node ./tools/serve.mjs"
+  }
+}
